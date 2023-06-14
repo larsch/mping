@@ -1,0 +1,8 @@
+[mping]
+# timeout = 4.0
+# interval= 2.0
+# log_timeouts = "timeouts.txt"
+
+[hosts]
+cloudflaredns = "1.1.1.1"
+googledns = "8.8.8.8"

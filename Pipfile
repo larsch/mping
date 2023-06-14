@@ -1,0 +1,25 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+aioping = "*"
+windows-curses = "*"
+async-dns = "*"
+requests = "*"
+pyping = "*"
+aiohttp = "*"
+aiofiles = "*"
+tomli = "*"
+matplotlib = "*"
+tk = "*"
+pyqt5 = "*"
+
+[dev-packages]
+autopep8 = "*"
+black = "*"
+ruff = "*"
+
+[requires]
+python_version = "3.10"
