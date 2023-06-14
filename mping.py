@@ -47,7 +47,10 @@ for alias, params in hosts["hosts"].items():
 
 ping_interval = 1.0
 ping_timeout = 3.0
+min_interval = 0.001
 log_timeouts = None
+timeout_check_interval = 1.0
+min_timeout_check_interval = 0.5
 if mping := hosts.get("mping"):
     if interval_value := mping.get("interval"):
         ping_interval = interval_value
@@ -123,7 +126,7 @@ async def main(win):
 
     tasks = set()
 
-    col_pos = [0, 17, 23, 23, 32]
+    col_pos = [0, 17, 23, 23, 31]
 
     def adjust_col(index, count):
         count = count + 2
@@ -197,14 +200,16 @@ async def main(win):
                 if next_task == len(addresses):
                     next_task = 0
 
-                next_task_run += task_run_interval
-                wait_for_task_run = asyncio.create_task(asyncio.sleep(next_task_run - time.monotonic()))
+                now = time.monotonic()
+                next_task_run = max(next_task_run + task_run_interval, now + min_interval)
+                wait_for_task_run = asyncio.create_task(asyncio.sleep(next_task_run - now))
                 tasks.add(wait_for_task_run)
 
             elif task == wait_for_timeout_check:
                 # restart task
-                next_timeout_check += 1.0
-                wait_for_timeout_check = asyncio.create_task(asyncio.sleep(next_timeout_check - time.monotonic()))
+                now = time.monotonic()
+                next_timeout_check = max(next_timeout_check + timeout_check_interval, now + min_timeout_check_interval)
+                wait_for_timeout_check = asyncio.create_task(asyncio.sleep(next_timeout_check - now))
                 tasks.add(wait_for_timeout_check)
 
                 # show timeout counts on screen
